@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,8 @@ public class ItemListActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private Toolbar toolbarz;
 
+    private static DataGrabber grabbyData = new DataGrabber();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,9 @@ public class ItemListActivity extends AppCompatActivity {
         toolbarz = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbarz);
         toolbarz.setTitle(getTitle());
+
+        grabbyData.getThatDataFromThatURL(this);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +77,18 @@ public class ItemListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+        new Handler().postDelayed(new Runnable() {
 
+            @Override
+            public void run() {
+                //do something
+                recycleViewSpawn();
+            }
+        }, 2000);
+    }
+
+    private void recycleViewSpawn()
+    {
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -154,7 +171,7 @@ public class ItemListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mContentView.setText(String.valueOf(mValues.get(position).content));
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
